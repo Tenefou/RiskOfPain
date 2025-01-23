@@ -85,6 +85,17 @@ public class ThirdPersonController1 : MonoBehaviour
             rb.linearVelocity = horizontalVelocity.normalized * maxSpeed + Vector3.up * rb.linearVelocity.y;
         }
 
+
+        if (rb.linearVelocity.y < -0.1f && !isGrounded)
+        {
+            isJumping = false;
+            isfalling = true;
+        }
+        else if (isGrounded)
+        {
+            isfalling = false;
+        }
+
         LookAt();
         AlignToCamera();
         IsGrounded();
@@ -93,10 +104,10 @@ public class ThirdPersonController1 : MonoBehaviour
 
     private void LookAt()
     {
-        // Récupère l'orientation avant de la caméra
+        // RÃ©cupÃ¨re l'orientation avant de la camÃ©ra
         Vector3 cameraForward = GetCameraForward(playerCamera);
 
-        // Oriente toujours le personnage vers l'avant de la caméra
+        // Oriente toujours le personnage vers l'avant de la camÃ©ra
         if (cameraForward.sqrMagnitude > 0.1f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(cameraForward, Vector3.up);
@@ -125,6 +136,7 @@ public class ThirdPersonController1 : MonoBehaviour
             forceDirection += Vector3.up * jumpForce;
             isJumping = true;
             isGrounded = false;
+            isfalling = false;
         }
     }
 
@@ -138,37 +150,35 @@ public class ThirdPersonController1 : MonoBehaviour
     {
         Ray ray = new Ray(this.transform.position + Vector3.up * 0.25f, Vector3.down);
         Debug.DrawRay(this.transform.position + Vector3.up * 0.25f, Vector3.down, Color.red);
-        logger.Log("Is Grounded :" + isGrounded);
-        logger.Log("Is Jumping :" + isJumping);
-        logger.Log("Is Falling :" + isfalling);
+
         if (Physics.Raycast(ray, out RaycastHit hit, 0.3f))
         {
             if (!isGrounded)
             {
+                Debug.Log("Player landed");
                 isGrounded = true;
                 isJumping = false;
                 isfalling = false;
-
-                Vector3 velocity = rb.linearVelocity;
-
-                if (velocity.y < -0.1f && !isGrounded)
-                {
-                    rb.linearDamping = 0f;
-                    isJumping = false;
-                    isfalling = true;
-                }
-                else
-                {
-                    isfalling = false;
-                    isJumping = true;
-                    rb.linearDamping = 10f;
-                }
+                rb.linearDamping = 10f;
             }
 
         }
         else
         {
             isGrounded = false;
+
+            Vector3 velocity = rb.linearVelocity;
+            Debug.Log("rb.linearVelocity.y = " + velocity.y);
+            if (velocity.y < -0f)
+            {
+                rb.linearDamping = 0f;
+                isJumping = false;
+                isfalling = true;
+            }
+            else
+            {
+                rb.linearDamping = 10f;
+            }
         }
     }
 
