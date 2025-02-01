@@ -588,7 +588,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1198908ceccf2d64dba005bb495e58da, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 11.97
+      value: -1.881
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1198908ceccf2d64dba005bb495e58da, type: 3}
       propertyPath: m_LocalPosition.z
@@ -666,7 +666,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2721f1a5b362dc949966ef4b4dd0ed67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementForce: 0.5
+  movementForce: 3
   jumpForce: 30
   maxSpeed: 5
   playerCamera: {fileID: 1982390930}
@@ -1034,7 +1034,7 @@ Transform:
   m_GameObject: {fileID: 1982390928}
   serializedVersion: 2
   m_LocalRotation: {x: 0.20262487, y: -9.5999836e-17, z: 1.9864005e-17, w: 0.97925645}
-  m_LocalPosition: {x: 13.35, y: 16.970001, z: -8.697561}
+  m_LocalPosition: {x: 13.35, y: 3.119, z: -8.697561}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
