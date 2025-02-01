@@ -3,21 +3,18 @@ using UnityEditor.ShaderGraph;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
 public class BuckAnimator : MonoBehaviour
 {
     private Animator animator;
 
-    private ThirdPersonActions controls; // Référence à l'asset généré
+    private ThirdPersonActions controls;
     private Vector2 inputVector;
     private Vector2 smoothInputVector;
     private Vector2 inputVelocity;
 
-
-
     private void Awake()
     {
-        controls = new ThirdPersonActions(); // Initialise l'asset généré
+        controls = new ThirdPersonActions();
     }
 
     private void Start()
@@ -27,22 +24,28 @@ public class BuckAnimator : MonoBehaviour
 
     private void OnEnable()
     {
-        controls.Enable(); // Active les actions
-        controls.Player.Move.performed += OnMove; // Associe l'événement
-        controls.Player.Move.canceled += OnMove; // Gère l'arrêt du mouvement
+        controls.Enable();
+        controls.Player.Move.performed += OnMove;
+        controls.Player.Move.canceled += OnMove;
     }
 
     private void OnDisable()
     {
-        controls.Player.Move.performed -= OnMove; // Désassocie l'événement
+        controls.Player.Move.performed -= OnMove;
         controls.Player.Move.canceled -= OnMove;
-        controls.Disable(); // Désactive les actions
+        controls.Disable();
     }
-
 
     public void OnMove(InputAction.CallbackContext context)
     {
         inputVector = context.ReadValue<Vector2>();
+
+        // Normalisation pour obtenir des valeurs discrètes de 1 lorsqu'on appuie sur deux touches
+        if (inputVector != Vector2.zero)
+        {
+            inputVector.Normalize();
+            inputVector *= Mathf.Sqrt(2); // Multiplie par la racine carrée de 2 pour atteindre 1
+        }
     }
 
     private void Update()

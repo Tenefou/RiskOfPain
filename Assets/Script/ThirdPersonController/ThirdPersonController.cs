@@ -85,6 +85,8 @@ public class ThirdPersonController1 : MonoBehaviour
             rb.linearVelocity = horizontalVelocity.normalized * maxSpeed + Vector3.up * rb.linearVelocity.y;
         }
 
+       
+
 
         if (rb.linearVelocity.y < -0.1f && !isGrounded)
         {
@@ -99,7 +101,6 @@ public class ThirdPersonController1 : MonoBehaviour
         LookAt();
         AlignToCamera();
         IsGrounded();
-        AnimationJumpManager();
     }
 
     private void LookAt()
@@ -137,6 +138,7 @@ public class ThirdPersonController1 : MonoBehaviour
             isJumping = true;
             isGrounded = false;
             isfalling = false;
+            animator.SetBool("isJumping", true);
         }
     }
 
@@ -155,10 +157,12 @@ public class ThirdPersonController1 : MonoBehaviour
         {
             if (!isGrounded)
             {
-                Debug.Log("Player landed");
                 isGrounded = true;
                 isJumping = false;
                 isfalling = false;
+                animator.SetBool("isGrounded", true);
+                animator.SetBool("isFalling", false);
+                animator.SetBool("isJumping", false);
                 rb.linearDamping = 10f;
             }
 
@@ -174,6 +178,9 @@ public class ThirdPersonController1 : MonoBehaviour
                 rb.linearDamping = 0f;
                 isJumping = false;
                 isfalling = true;
+                animator.SetBool("isGrounded", false);
+                animator.SetBool("isFalling", true);
+                animator.SetBool("isJumping", false);
             }
             else
             {
@@ -192,12 +199,5 @@ public class ThirdPersonController1 : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(cameraForward, Vector3.up);
             rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, Time.deltaTime * 10f);
         }
-    }
-
-    private void AnimationJumpManager()
-    {
-        animator.SetBool("isJumping", isJumping);
-        animator.SetBool("isFalling", isfalling);
-        animator.SetBool("isGrounded", isGrounded);
     }
 }
