@@ -79,13 +79,6 @@ public class ThirdPersonController1 : MonoBehaviour
         forceDirection = Vector3.zero;
         Vector3 velocity = rb.linearVelocity;
         Vector3 horizontalVelocity = new Vector3(velocity.x, 0, velocity.z);
-        if (horizontalVelocity.magnitude > maxSpeed * maxSpeed)
-        {
-            horizontalVelocity = horizontalVelocity.normalized * maxSpeed;
-            rb.linearVelocity = horizontalVelocity.normalized * maxSpeed + Vector3.up * rb.linearVelocity.y;
-        }
-
-       
 
 
         if (rb.linearVelocity.y < -0.1f && !isGrounded)
@@ -163,31 +156,36 @@ public class ThirdPersonController1 : MonoBehaviour
                 animator.SetBool("isGrounded", true);
                 animator.SetBool("isFalling", false);
                 animator.SetBool("isJumping", false);
-                rb.linearDamping = 10f;
+                rb.linearDamping = 5f; // Ajustez la valeur pour une meilleure friction au sol
             }
-
         }
         else
         {
             isGrounded = false;
 
             Vector3 velocity = rb.linearVelocity;
-            Debug.Log("rb.linearVelocity.y = " + velocity.y);
-            if (velocity.y < -0f)
+            Debug.Log("rb.velocity.y = " + velocity.y);
+
+            if (velocity.y < 0f)
             {
-                rb.linearDamping = 0f;
+                rb.linearDamping = 0f; // Réduire la résistance pour permettre à la gravité d'agir
                 isJumping = false;
                 isfalling = true;
                 animator.SetBool("isGrounded", false);
                 animator.SetBool("isFalling", true);
                 animator.SetBool("isJumping", false);
             }
-            else
+
+            // Limiter la vitesse horizontale
+            Vector3 horizontalVelocity = new Vector3(velocity.x, 0, velocity.z);
+            if (horizontalVelocity.magnitude > maxSpeed)
             {
-                rb.linearDamping = 10f;
+                horizontalVelocity = horizontalVelocity.normalized * maxSpeed;
+                rb.linearVelocity = new Vector3(horizontalVelocity.x, velocity.y, horizontalVelocity.z);
             }
         }
     }
+
 
     private void AlignToCamera()
     {
